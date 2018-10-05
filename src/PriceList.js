@@ -14,35 +14,35 @@ class SymbolPicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.symbols !== this.state.symbols && nextProps.symbols) {
+    if (nextProps.props !== this.state.symbols) {
       let symbolsQuotes = "";
-      nextProps.symbols.map(s => {
+      nextProps.props.forEach(s => {
         symbolsQuotes += s + ",";
       });
 
       symbolsQuotes = symbolsQuotes.substr(0, symbolsQuotes.length - 1);
 
-      // Fetch URL with each of these symbols, then fill in this.state.prices
+      let url = getQuotesUrl + symbolsQuotes + "&api_key=" + apiKey;
 
-      // this.state.symbols.map((s) => {
-      //   fetch(getQuotesUrl + ).then(res => res.json()).then(
-      //     result => {
-      //     }
-      //   );
-      // })
+      fetch(url).then(res => res.json()).then(result => {
+        let prices = [];
+        result.forEach(i => {
+          prices = [...prices, { symbol: i.symbol, price: i.price }];
+        });
+
+        this.setState({
+          prices: prices
+        });
+      });
     }
-
-    console.log("New symbols: " + JSON.stringify(nextProps));
   }
 
   render() {
     return (
       <div>
-        {this.state.symbols
-          ? this.state.symbols.map(s => {
-              return <div>{JSON.stringify(s)}</div>;
-            })
-          : "No symbols selected."}
+        {this.state.prices.map((s, index) => {
+          return <div key={index}>{s.symbol}: {s.price}</div>;
+        })}
       </div>
     );
   }
