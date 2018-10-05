@@ -15,8 +15,6 @@ class SymbolPicker extends Component {
   componentDidMount() {
     fetch(getSymbolsUrl).then(res => res.json()).then(
       result => {
-        console.log(result);
-
         this.setState({
           isLoaded: true,
           selected: result[0],

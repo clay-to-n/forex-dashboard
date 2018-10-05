@@ -7,4 +7,5 @@
   to container components, and keep the presentational components purely focused on display.
 - The styling is all inherited from Create-React-App. If we were to style this, we would break out component styles into
   their own css files. I put a bit of styling into App.css, purely for speed of development.
-  
+- There's no real handling for failed API calls. Right now it won't display anything to the user if the internet is out,
+  or 1Forge is down, or the API key fails.

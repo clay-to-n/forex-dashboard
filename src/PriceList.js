@@ -24,7 +24,6 @@ class SymbolPicker extends Component {
     let url = getQuotesUrl + symbolsQuotes + "&api_key=" + apiKey;
 
     fetch(url).then(res => res.json()).then(result => {
-      console.log("Prices fetched!");
       let prices = [];
       result.forEach(i => {
         prices = [...prices, { symbol: i.symbol, price: i.price }];
