@@ -57,6 +57,9 @@ class SymbolPicker extends Component {
               <button onClick={this.addSymbol}>
                 Add Symbol
               </button>
+              <button className="refresh-button" onClick={this.props.refresh}>
+                Refresh All Prices
+              </button>
             </div>
           : "Loading symbols..."}
       </div>

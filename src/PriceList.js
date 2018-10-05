@@ -8,38 +8,47 @@ class SymbolPicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      symbols: [],
       prices: []
     };
+    this.refresh = this.refresh.bind(this);
+  }
+
+  getPrices(symbols) {
+    let symbolsQuotes = "";
+    symbols.forEach(s => {
+      symbolsQuotes += s + ",";
+    });
+
+    symbolsQuotes = symbolsQuotes.substr(0, symbolsQuotes.length - 1);
+
+    let url = getQuotesUrl + symbolsQuotes + "&api_key=" + apiKey;
+
+    fetch(url).then(res => res.json()).then(result => {
+      console.log("Prices fetched!");
+      let prices = [];
+      result.forEach(i => {
+        prices = [...prices, { symbol: i.symbol, price: i.price }];
+      });
+
+      this.setState({
+        prices: prices
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.props !== this.state.symbols) {
-      let symbolsQuotes = "";
-      nextProps.props.forEach(s => {
-        symbolsQuotes += s + ",";
-      });
+    this.getPrices(nextProps.props);
+  }
 
-      symbolsQuotes = symbolsQuotes.substr(0, symbolsQuotes.length - 1);
-
-      let url = getQuotesUrl + symbolsQuotes + "&api_key=" + apiKey;
-
-      fetch(url).then(res => res.json()).then(result => {
-        let prices = [];
-        result.forEach(i => {
-          prices = [...prices, { symbol: i.symbol, price: i.price }];
-        });
-
-        this.setState({
-          prices: prices
-        });
-      });
+  refresh() {
+    if (this.state.prices.length > 0) {
+      this.getPrices(this.state.prices.map(p => p.symbol));
     }
   }
 
   render() {
     return (
-      <div>
+      <div className="prices-list">
         {this.state.prices.map((s, index) => {
           return <div key={index}>{s.symbol}: {s.price}</div>;
         })}
